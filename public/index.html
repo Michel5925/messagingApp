@@ -10,7 +10,7 @@
     <h1>My Messaging App</h1>
     <p>Welcome!!!</p>
 
-    <form id="registration" action="" method="post">
+    <form id="registration">
         <label for="name">Username</label>
         <input type="text" id="name" name="username" required>
 
@@ -18,6 +18,16 @@
         <input type="password" id="password" name="password" required>
 
         <button type="submit">Create User</button>
+    </form>
+
+    <form id="login">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" required>
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" required>
+
+        <button type="submit">Login</button>
     </form>
     
     <script src="script.js"></script>
