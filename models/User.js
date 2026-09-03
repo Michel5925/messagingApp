@@ -4,13 +4,16 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true // Tells the database (MongoDB) a username must be unique
     },
 
     password: {
         type: String,
         required: true
     }
+}, {
+    timestamps: true // Automatically gives user createdAt and updatedAt functions
 });
 
 module.exports = mongoose.model("User", userSchema);

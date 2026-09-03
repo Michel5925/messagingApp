@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 
 const User = require("./models/User.js");
+const Message = require("./models/Message.js");
 
 const app = express();
 const PORT = 3000;
@@ -35,15 +36,6 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 // Registration function and checks
 app.post("/register", async (req, res) => {
     const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const existingUser = await User.findOne({ username });
-
-    if(existingUser)
-    {
-        return res.status(400).json({
-            message: "Username already exists"
-        });
-    }
 
     if(!username || !password)
     {
@@ -59,6 +51,17 @@ app.post("/register", async (req, res) => {
         });
     }
 
+    const existingUser = await User.findOne({ username });
+
+    if(existingUser)
+    {
+        return res.status(400).json({
+            message: "Username already exists"
+        });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = new User({
         username: username,
         password: hashedPassword
@@ -72,7 +75,7 @@ app.post("/register", async (req, res) => {
 });
 
 function requireLogin(req, res, next) {
-    if(!req.session.userID)
+    if(!req.session.userId)
     {
         return res.status(401).json({
             message: "You must be logged in"
@@ -102,7 +105,7 @@ app.post("/login", async (req, res) => {
         });
     }
 
-    req.session.userID = user._id;
+    req.session.userId = user._id;
 
     res.json({ message: "Login successful" });
 });
@@ -122,4 +125,85 @@ app.post("/logout", (req, res) => {
 
         res.json({ message: "Logged out" });
     });
+});
+
+// Get all users
+app.get("/users", requireLogin, async (req, res) => {
+    try {
+        const users = await User.find().select("username");
+
+        res.json(users);
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Could not get users"
+        });
+    }
+});
+
+// Create a message
+app.post("/messages", requireLogin, async (req, res) => {
+    console.log("Logged in user:", req.session.userId);
+    console.log("Message data:", req.body);
+
+    try {
+        const { recipient, text } = req.body;
+
+        if(!recipient || !text)
+        {
+            return res.status(400).json({
+                message: "Recipient and message are required"
+            });
+        }
+
+        const message = new Message({
+            text,
+            sender: req.session.userId,
+            recipient
+        });
+
+        await message.save();
+
+        res.json({ message: "Message sent" });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Could not send message"
+        });
+    }
+});
+
+// Get a conversation
+app.get("/messages/:userId", requireLogin, async (req, res) => {
+    try {
+        const otherUserId = req.params.userId;
+        const currentUserId = req.session.userId;
+
+        const messages = await Message.find({
+            $or: [ // Find messages where either condition is true (You => Them or Them => You)
+                {
+                    sender: currentUserId,
+                    recipient: otherUserId
+                },
+                {
+                    sender: otherUserId,
+                    recipient: currentUserId
+                }
+            ]
+        })
+        .populate("sender", "username")
+        .populate("recipient", "username")
+        . sort({ createdAt: 1 });
+
+        res.json(messages);
+        
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            messages: "Could not get messages"
+        });
+    }
 });

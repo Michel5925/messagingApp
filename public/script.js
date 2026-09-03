@@ -50,4 +50,30 @@ loginForm.addEventListener("submit", async (event) => {
     const data = await response.json();
 
     console.log(data);
-})
+});
+
+const messageForm = document.querySelector("#messageForm")
+
+messageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const recipient = document.querySelector("#recipient").value;
+    const text = document.querySelector("#messageText").value;
+
+    const response = await fetch("/messages", {
+        method: "POST",
+        
+        headers: {
+            "Content-Type" : "application/json"
+        },
+
+        body: JSON.stringify({
+            recipient,
+            text
+        })
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+});
