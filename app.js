@@ -207,3 +207,15 @@ app.get("/messages/:userId", requireLogin, async (req, res) => {
         });
     }
 });
+
+app.get("/me", requireLogin, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).select("username");
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({
+            message: "Could not get current user"
+        });
+    }
+});

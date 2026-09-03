@@ -7,8 +7,32 @@
     <title>Messaging App</title>
 </head>
 <body>
-    <h1>My Messaging App</h1>
-    <p>Welcome!!!</p>
+    <!-- <h1>My Messaging App</h1>
+    <p>Welcome!!!</p> -->
+
+    <div id="app">
+        <aside id="userList">
+            <h2>Users</h2>
+
+            <div id="users"></div>
+
+            <button id="logout">Logout</button>
+        </aside>
+
+        <main id="chat">
+            <header id="chatHeader">
+                <h2 id="chatWith">Select a user</h2>
+            </header>
+
+            <div id="messages"></div>
+
+            <form id="messageForm">
+                <input type="text" id="messageText" placeholder="Type a message..." required>
+        
+                <button type="submit">Send Message</button>
+            </form>
+        </main>
+    </div>
 
     <form id="registration">
         <label for="name">Username</label>
@@ -28,16 +52,6 @@
         <input type="password" id="loginPassword" required>
 
         <button type="submit">Login</button>
-    </form>
-
-    <form id="messageForm">
-        <label for="recipient">Recipient ID</label>
-        <input type="text" id="recipient" required>
-
-        <label for="messageText">Message</label>
-        <input type="text" id="messageText" required>
-
-        <button type="submit">Send Message</button>
     </form>
     
     <script src="script.js"></script>
