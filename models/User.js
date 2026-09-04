@@ -11,6 +11,16 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+
+    isMember: {
+        type: Boolean,
+        default: false
+    },
+
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true // Automatically gives user createdAt and updatedAt functions

@@ -177,7 +177,7 @@ loginForm.addEventListener("submit", async (event) => {
     }
 
     document.querySelector("#authSection").style.display = "none";
-    document.querySelector("#app").style.display = flex;
+    document.querySelector("#app").style.display = "flex";
 
     await loadCurrentUser();
     await loadUsers();
@@ -226,3 +226,30 @@ logoutButton.addEventListener("click", async () => {
 
     location.reload();
 });
+
+const joinMembershipButton = document.querySelector("#joinMembership");
+
+joinMembershipButton.addEventListener("click", async () => {
+    const secret = prompt("Enter the membership secret:");
+
+    if(!secret)
+    {
+        return;
+    }
+
+    const response = await fetch("/join", {
+        method: "POST",
+
+        headers: {
+            "Content-Type" : "application/json"
+        },
+
+        body: JSON.stringify({
+            secret
+        })
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+})

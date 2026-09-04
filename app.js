@@ -138,21 +138,19 @@ app.post("/logout", (req, res) => {
 // Get all users
 app.get("/users", requireLogin, async (req, res) => {
     try {
-        const users = await User.find().select("username");
+        const users = await User.find().select("username isMember");
 
         res.json(users);
 
     } catch (error) {
-        res.status(500).json({
-            message: "Could not get users"
-        });
+        res.status(500).json({ message: "Could not get users" });
     }
 });
 
 // Create a message
 app.post("/messages", requireLogin, async (req, res) => {
-    console.log("Logged in user:", req.session.userId);
-    console.log("Message data:", req.body);
+    // console.log("Logged in user:", req.session.userId);
+    // console.log("Message data:", req.body);
 
     try {
         const { recipient, text } = req.body;
@@ -164,8 +162,31 @@ app.post("/messages", requireLogin, async (req, res) => {
             });
         }
 
+        if(text.trim().length === 0)
+        {
+            return res.status(400).json({
+                message: "Message cannot be empty"
+            });
+        }
+
+        if(text.length > 2000)
+        {
+            return res.status(400).json({
+                message: "Message is too long"
+            });
+        }
+
+        const recipientUser = await User.findById(recipient);
+
+        if(!recipientUser)
+        {
+            return res.status(404).json({
+                message: "Recipient not found"
+            });
+        }
+
         const message = new Message({
-            text,
+            text: text.trim(),
             sender: req.session.userId,
             recipient
         });
@@ -177,9 +198,7 @@ app.post("/messages", requireLogin, async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        res.status(500).json({
-            message: "Could not send message"
-        });
+        res.status(500).json({ message: "Could not send message" });
     }
 });
 
@@ -210,9 +229,7 @@ app.get("/messages/:userId", requireLogin, async (req, res) => {
     } catch (error) {
         console.error(error);
 
-        res.status(500).json({
-            messages: "Could not get messages"
-        });
+        res.status(500).json({ messages: "Could not get messages" });
     }
 });
 
@@ -222,8 +239,76 @@ app.get("/me", requireLogin, async (req, res) => {
 
         res.json(user);
     } catch (error) {
-        res.status(500).json({
-            message: "Could not get current user"
+        res.status(500).json({ message: "Could not get current user" });
+    }
+});
+
+app.post("/join", requireLogin, async (req, res) => {
+    try {
+        const { secret } = req.body;
+
+        if(secret !== process.env.MEMBERSHIP_SECRET)
+        {
+            return res.status(403).json({
+                message: "Incorrect membership secret"
+            });
+        }
+
+        const user = await User.findById(req.session.userId);
+
+        if(!user)
+        {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        user.isMember = true;
+
+        await user.save();
+
+        res.json({ message: "You are now a member" });
+
+    } catch (error) {
+        console.log(error);
+
+        res.json({ message: "Could mot join membership" });
+    }
+});
+
+function requireAdmin(req, res, next) {
+    if(!req.session.userId)
+    {
+        return res.status(401).json({
+            message: "You must be logged in"
         });
+    }
+
+    User.findById(req.session.userId).then(user => {
+        if(!user || !user.isAdmin)
+        {
+            return res.status(403).json({
+                message: "Admin access required"
+            });
+        }
+
+        next();
+    }).catch(error => {
+        console.error(error);
+
+        res.status(500).json({ message: "Server error" });
+    });
+}
+
+app.get("/admin/users", requireAdmin, async (req, res) => {
+    try {
+        const users = await User.find().select("username isMember isAdmin createdAt");
+
+        res.json(users);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({ message: "Could not get users"});
     }
 });
