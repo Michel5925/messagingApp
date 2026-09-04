@@ -14,6 +14,7 @@ async function loadUsers() {
 
     users.forEach(user => {
         const userButton = document.createElement("button");
+        userButton.classList.add("user");
         userButton.textContent = user.username;
 
         userButton.addEventListener("click", () => {
@@ -35,9 +36,19 @@ async function loadCurrentUser() {
     currentUser = await response.json();
 }
 
+// Initialisation function / Automatically checks if you're already logged in
 async function init() {
-    await loadCurrentUser();
-    await loadUsers();
+    const response = await fetch("/me");
+
+    if(response.ok)
+    {
+        currentUser = await response.json();
+
+        document.querySelector("#authSection").style.display = "none";
+        document.querySelector("#app").style.display = "flex";
+    
+        await loadUsers();
+    }
 }
 
 init();
@@ -47,6 +58,18 @@ function selectUser(user) {
     selectedUser = user;
 
     document.querySelector("#chatWith").textContent = user.username;
+
+    // Highlight the person you are talking to
+    document.querySelectorAll(".user").forEach(button => {
+        button.classList.remove("active");
+    });
+
+    document.querySelectorAll(".user").forEach(button => {
+        if(button.textContent === user.username)
+        {
+            button.classList.add("active")
+        }
+    });
 
     loadMessages(user._id);
 }
@@ -62,6 +85,9 @@ async function loadMessages(userId) {
     messages.forEach(message => {
         displayMessage(message);
     });
+
+    // The conversation automatically opens at the bottom instead of the user having to scroll down
+    messageContainer.scrollTop = messageContainer.scrollHeight;
 }
 
 function displayMessage(message) {
@@ -69,6 +95,21 @@ function displayMessage(message) {
 
     const messageElement = document.createElement("div");
     messageElement.classList.add("message");
+    messageContainer.appendChild(messageElement);
+
+    const messageText = document.createElement("div");
+    messageText.textContent = message.text;
+
+    const timestamp = document.createElement("small");
+
+    timestamp.textContent =
+        new Date(message.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+    messageElement.appendChild(messageText);
+    messageElement.appendChild(timestamp);
 
     if(message.sender._id === currentUser._id)
     {
@@ -78,9 +119,6 @@ function displayMessage(message) {
     {
         messageElement.classList.add("received");
     }
-
-    messageElement.textContent = message.text;
-    messageContainer.appendChild(messageElement);
 }
 
 const registrationForm = document.querySelector("#registration");
@@ -132,7 +170,17 @@ loginForm.addEventListener("submit", async (event) => {
 
     const data = await response.json();
 
-    console.log(data);
+    if(!response.ok)
+    {
+        console.error(data.message);
+        return;
+    }
+
+    document.querySelector("#authSection").style.display = "none";
+    document.querySelector("#app").style.display = flex;
+
+    await loadCurrentUser();
+    await loadUsers();
 });
 
 const messageForm = document.querySelector("#messageForm")
@@ -167,4 +215,14 @@ messageForm.addEventListener("submit", async (event) => {
     document.querySelector("#messageText").value = "";
 
     await loadMessages(selectedUser._id);
+});
+
+const logoutButton = document.querySelector("#logout");
+
+logoutButton.addEventListener("click", async () => {
+    await fetch("/logout", {
+        method: "POST"
+    });
+
+    location.reload();
 });

@@ -7,8 +7,32 @@
     <title>Messaging App</title>
 </head>
 <body>
-    <!-- <h1>My Messaging App</h1>
-    <p>Welcome!!!</p> -->
+    <div id="authSection">
+        <h1>My Messaging App</h1>
+        <!-- <p>Welcome!!!</p> -->
+
+        <form id="registration">
+            <h2>Create Account</h2>
+
+            <label for="name">Username</label>
+            <input type="text" id="name" required>
+    
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+    
+            <button type="submit">Create User</button>
+        </form>
+
+        <form id="login">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" required>
+    
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" required>
+    
+            <button type="submit">Login</button>
+        </form>
+    </div>
 
     <div id="app">
         <aside id="userList">
@@ -33,26 +57,6 @@
             </form>
         </main>
     </div>
-
-    <form id="registration">
-        <label for="name">Username</label>
-        <input type="text" id="name" name="username" required>
-
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-
-        <button type="submit">Create User</button>
-    </form>
-
-    <form id="login">
-        <label for="loginUsername">Username</label>
-        <input type="text" id="loginUsername" required>
-
-        <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" required>
-
-        <button type="submit">Login</button>
-    </form>
     
     <script src="script.js"></script>
 </body>

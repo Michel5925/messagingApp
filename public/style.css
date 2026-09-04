@@ -8,7 +8,7 @@ h1 {
 }
 
 #app {
-    display: flex;
+    display: none;
     height: 100vh;
 }
 
@@ -54,10 +54,20 @@ h1 {
 
 /* Make the messages look different */
 .message {
+    display: flex;
+    flex-direction: column;
     padding: 10px 15px;
     margin-bottom: 10px;
     border-radius: 10px;
     max-width: 60%;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.message small {
+    font-size: 11px;
+    margin-top: 4px;
+    opacity: 0.6;
 }
 
 .sent {
@@ -68,4 +78,29 @@ h1 {
 .received {
     margin-right: auto;
     background-color: #eee;
+}
+
+#users {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user {
+    border: none;
+    background: transparent;
+    text-align: left;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.user:hover {
+    background: #eee;
+}
+
+.user.active {
+    background: #ddd;
+    font-weight: bold;
 }
