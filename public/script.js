@@ -4,6 +4,7 @@ const usersContainer = document.querySelector("#users");
 
 let selectedUser = null;
 let currentUser = null;
+let messageRefreshInterval = null;
 
 // Load the users
 async function loadUsers() {
@@ -15,7 +16,29 @@ async function loadUsers() {
     users.forEach(user => {
         const userButton = document.createElement("button");
         userButton.classList.add("user");
-        userButton.textContent = user.username;
+
+        const userInfo = document.createElement("div");
+        userInfo.classList.add("userInfo");
+
+        const username = document.createElement("div");
+        username.classList.add("username");
+        username.textContent = user.username;
+
+        const preview = document.createElement("div");
+        preview.classList.add("messagePreview");
+        preview.textContent = user.lastMessage || "No messages yet"
+
+        userInfo.appendChild(username);
+        userInfo.appendChild(preview);
+        userButton.appendChild(userInfo);
+
+        if(user.unreadCount > 0)
+        {
+            const unreadBadge = document.createElement("span");
+            unreadBadge.textContent = user.unreadCount;
+            unreadBadge.classList.add("unreadBadge");
+            userButton.appendChild(unreadBadge);
+        }
 
         userButton.addEventListener("click", () => {
             selectUser(user);
@@ -54,10 +77,14 @@ async function init() {
 init();
 
 // Selecting a user
-function selectUser(user) {
+async function selectUser(user) {
     selectedUser = user;
 
     document.querySelector("#chatWith").textContent = user.username;
+
+    await fetch(`/messages/read/${user._id}`, {
+        method: 'PUT'
+    });
 
     // Highlight the person you are talking to
     document.querySelectorAll(".user").forEach(button => {
@@ -71,12 +98,33 @@ function selectUser(user) {
         }
     });
 
-    loadMessages(user._id);
+    await loadMessages(user._id);
+    await loadUsers();
+
+    // Stop the previous refresh timer
+    if(messageRefreshInterval)
+    {
+        clearInterval(messageRefreshInterval);
+    }
+
+    // Refresh the conversation every 3 seconds
+    messageRefreshInterval = setInterval(() => {
+        if(selectedUser)
+        {
+            loadMessages(selectedUser._id, false); // When it automatically refreshes, it doesn't constantly force the scrollbar to the bottom
+        }
+    }, 3000); // 3000 milliseconds = 3 seconds
 }
 
 // Load the conversation
-async function loadMessages(userId) {
+async function loadMessages(userId, shouldScroll = true) {
     const response = await fetch(`/messages/${userId}`);
+
+    if(!response.ok)
+    {
+        return;
+    }
+
     const messages = await response.json();
 
     const messageContainer = document.querySelector("#messages");
@@ -87,7 +135,10 @@ async function loadMessages(userId) {
     });
 
     // The conversation automatically opens at the bottom instead of the user having to scroll down
-    messageContainer.scrollTop = messageContainer.scrollHeight;
+    if(shouldScroll)
+    {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
 }
 
 function displayMessage(message) {

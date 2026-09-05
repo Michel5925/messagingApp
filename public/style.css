@@ -89,6 +89,15 @@ h1 {
     opacity: 1;
 }
 
+.messagePreview {
+    margin-top: 3px;
+    font-size: 13px;
+    opacity: 0.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .sent {
     margin-left: auto;
     background-color: #d1e7ff;
@@ -106,6 +115,11 @@ h1 {
 }
 
 .user {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     border: none;
     background: transparent;
     text-align: left;
@@ -122,4 +136,26 @@ h1 {
 .user.active {
     background: #ddd;
     font-weight: bold;
+}
+
+.unreadBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.userInfo {
+    min-width: 0;
+    text-align: left;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 600;
 }

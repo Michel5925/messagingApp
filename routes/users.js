@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/User.js");
+const Message = require("../models/Message.js");
 const { requireLogin, requireAdmin } = require("../middleware/auth.js");
 
 const router = express.Router();
@@ -9,7 +10,35 @@ router.get("/", requireLogin, async (req, res) => {
     try {
         const users = await User.find().select("username isMember");
 
-        res.json(users);
+        const usersWithInfo = await Promise.all(users.map(async user => {
+            const unreadCount = await Message.countDocuments({
+                sender: user._id,
+                recipient: req.session.userId,
+                read: false
+            });
+
+            const lastMessage = await Message.findOne({ // Looks for a message between you and this particular user
+                $or: [ // Goes both ways
+                    {
+                        sender: req.session.userId,
+                        recipient: user._id
+                    },
+                    {
+                        sender: user._id,
+                        recipient: req.session.userId
+                    }
+                ]
+            }).sort({ createdAt: -1 }); // Give me the newest message first
+
+            return {
+                ...user.toObject(),
+                unreadCount,
+                lastMessage: lastMessage ? lastMessage.text : null,
+                lastMessageTime: lastMessage ? lastMessage.createdAt : null
+            };
+        }));
+
+        res.json(usersWithInfo);
 
     } catch (error) {
         console.error(error);

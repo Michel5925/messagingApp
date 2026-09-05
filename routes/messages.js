@@ -174,6 +174,30 @@ router.put("/:messageId", requireLogin, async (req, res) => {
             message: "Could not edit message"
         });
     }
-})
+});
+
+router.put("/read/:userId", requireLogin, async (req, res) => {
+    try {
+        await Message.updateMany(
+            {
+                sender: req.params.userId, // Other person sent the message
+                recipient: req.session.userId, // You recieved it
+                read: false // You haven't read the message yet
+            },
+            {
+                read: true // Changes them to read
+            }
+        );
+
+        res.json({ message: "Message marked as read" });
+        
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Could not mark message as read"
+        });
+    }
+});
 
 module.exports = router;
