@@ -126,4 +126,54 @@ router.delete("/:messageId", requireLogin, async (req, res) => {
     }
 });
 
+router.put("/:messageId", requireLogin, async (req, res) => {
+    try {
+        const { text } = req.body
+
+        if(!text || text.trim().length === 0)
+        {
+            return res.status(400).json({
+                message: "Message cannot be empty"
+            });
+        }
+
+        if(text.length > 2000)
+        {
+            return res.status(400).json({
+                message: "Message is too long"
+            });
+        }
+
+        const message = await Message.findById(req.params.messageId);
+
+        if(!message)
+        {
+            return res.status(404).json({
+                message: "Message not found"
+            });
+        }
+
+        // Make sure the logged in user owns the message
+        if(message.sender.toString() !== req.session.userId.toString())
+        {
+            return res.status(403).json({
+                message: "You can only edit your own messages"
+            });
+        }
+
+        message.text = text.trim();
+
+        await message.save();
+
+        res.json({ message: "Message updated" });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Could not edit message"
+        });
+    }
+})
+
 module.exports = router;

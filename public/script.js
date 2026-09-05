@@ -115,6 +115,43 @@ function displayMessage(message) {
     {
         messageElement.classList.add("sent");
 
+        const buttonContainer = document.createElement("div");
+        buttonContainer.classList.add("messageButtons");
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit"
+
+        editButton.addEventListener("click", async () => {
+            const newText = prompt("Edit your message:", message.text);
+
+            if(newText === null) { return; }
+
+            const response = await fetch(`/messages/${message._id}`,{
+                method: "PUT",
+
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+
+                body: JSON.stringify({
+                    text: newText
+                })
+            });
+
+            const data = await response.json();
+
+            if(!response.ok)
+            {
+                alert(data.message);
+                return;
+            }
+
+            // Updates MongoDB
+            await loadMessages(selectedUser._id);
+        });
+
+        buttonContainer.appendChild(editButton);
+
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
 
@@ -134,7 +171,8 @@ function displayMessage(message) {
             await loadMessages(selectedUser._id);
         });
 
-        messageElement.appendChild(deleteButton);
+        buttonContainer.appendChild(deleteButton);
+        messageElement.appendChild(buttonContainer);
     }
     else
     {
