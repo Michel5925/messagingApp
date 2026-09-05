@@ -70,6 +70,19 @@ h1 {
     opacity: 0.6;
 }
 
+.message button {
+    align-self: flex-end;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+.message button:hover {
+    opacity: 1;
+}
+
 .sent {
     margin-left: auto;
     background-color: #d1e7ff;

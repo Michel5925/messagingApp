@@ -91,4 +91,39 @@ router.get("/:userId", requireLogin, async (req, res) => {
     }
 });
 
+router.delete("/:messageId", requireLogin, async (req, res) => {
+    try {
+        // URL will look like DELETE /messages/messageID
+        const message = await Message.findById(req.params.messageId);
+
+        // If database (MongoDB) can't find the message
+        if(!message)
+        {
+            return res.status(404).json({
+                message: "Message not found"
+            });
+        }
+
+        // Compare 'who sent the message' with 'who is currently logged in' and if they're different
+        // Authentication vs Authorisation | 'Who are you' and 'Are you allowed to do this'
+        if(message.sender.toString() !== req.session.userId.toString())
+        {
+            return res.status(403).json({
+                message: "You can only delete your own messages"
+            });
+        }
+
+        await Message.findByIdAndDelete(req.params.messageId);
+
+        res.json({ message: "Message deleted" });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Could not delete message"
+        });
+    }
+});
+
 module.exports = router;

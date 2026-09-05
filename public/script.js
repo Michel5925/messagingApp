@@ -114,6 +114,27 @@ function displayMessage(message) {
     if(message.sender._id === currentUser._id)
     {
         messageElement.classList.add("sent");
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener("click", async () => {
+            const response = await fetch(`/messages/${message._id}`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if(!response.ok)
+            {
+                alert(data.message);
+                return;
+            }
+
+            await loadMessages(selectedUser._id);
+        });
+
+        messageElement.appendChild(deleteButton);
     }
     else
     {
@@ -252,4 +273,4 @@ joinMembershipButton.addEventListener("click", async () => {
     const data = await response.json();
 
     alert(data.message);
-})
+});
