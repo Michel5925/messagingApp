@@ -27,7 +27,7 @@ async function loadUsers() {
 
 // Get the current user
 async function loadCurrentUser() {
-    const response = await fetch("/me");
+    const response = await fetch("/users/me");
 
     if(!response.ok) {
         return;
@@ -38,7 +38,7 @@ async function loadCurrentUser() {
 
 // Initialisation function / Automatically checks if you're already logged in
 async function init() {
-    const response = await fetch("/me");
+    const response = await fetch("/users/me");
 
     if(response.ok)
     {
@@ -237,7 +237,7 @@ joinMembershipButton.addEventListener("click", async () => {
         return;
     }
 
-    const response = await fetch("/join", {
+    const response = await fetch("/users/join", {
         method: "POST",
 
         headers: {
