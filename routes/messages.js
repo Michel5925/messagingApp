@@ -1,6 +1,7 @@
 const express = require("express");
 const Message = require("../models/Message.js");
 const User = require("../models/User.js");
+const mongoose = require("mongoose");
 const { requireLogin } = require("../middleware/auth.js");
 
 const router = express.Router();
@@ -12,6 +13,13 @@ router.post("/", requireLogin, async (req, res) => {
 
     try {
         const { recipient, text } = req.body;
+
+        if(recipient == req.session.userId.toString())
+        {
+            return res.status(400).json({
+                message: "You cannot send a message to yourself"
+            })
+        }
 
         if(!recipient || !text)
         {
@@ -31,6 +39,13 @@ router.post("/", requireLogin, async (req, res) => {
         {
             return res.status(400).json({
                 message: "Message is too long"
+            });
+        }
+
+        if(!mongoose.Types.ObjectId.isValid(recipient))
+        {
+            return res.status(400).json({
+                message: "Invalid recipient ID"
             });
         }
 
@@ -63,6 +78,12 @@ router.post("/", requireLogin, async (req, res) => {
 // Get a conversation
 router.get("/:userId", requireLogin, async (req, res) => {
     try {
+        if(!mongoose.Types.ObjectId.isValid(req.params.userId))
+        {
+            return res.status(400).json({
+                message: "Invalid user ID"
+            });
+        }
         const otherUserId = req.params.userId;
         const currentUserId = req.session.userId;
 
@@ -91,8 +112,15 @@ router.get("/:userId", requireLogin, async (req, res) => {
     }
 });
 
+// Delete your message
 router.delete("/:messageId", requireLogin, async (req, res) => {
     try {
+        if(!mongoose.Types.ObjectId.isValid(req.params.messageId))
+        {
+            return res.status(400).json({
+                message: "Invalid message ID"
+            });
+        }
         // URL will look like DELETE /messages/messageID
         const message = await Message.findById(req.params.messageId);
 
@@ -126,8 +154,16 @@ router.delete("/:messageId", requireLogin, async (req, res) => {
     }
 });
 
+// Edit your message
 router.put("/:messageId", requireLogin, async (req, res) => {
     try {
+        if(!mongoose.Types.ObjectId.isValid(req.params.messageId))
+        {
+            return res.status(400).json({
+                message: "Invalid message ID"
+            });
+        }
+
         const { text } = req.body
 
         if(!text || text.trim().length === 0)
@@ -176,6 +212,7 @@ router.put("/:messageId", requireLogin, async (req, res) => {
     }
 });
 
+// Unread messages
 router.put("/read/:userId", requireLogin, async (req, res) => {
     try {
         await Message.updateMany(
@@ -190,7 +227,7 @@ router.put("/read/:userId", requireLogin, async (req, res) => {
         );
 
         res.json({ message: "Message marked as read" });
-        
+
     } catch (error) {
         console.error(error);
 

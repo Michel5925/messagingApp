@@ -32,7 +32,21 @@ app.use(authRoutes);
 app.use("/users", userRoutes); // Express combines /users with the routes (Example: /users/me)
 app.use("/messages", messageRoutes); // Similar to previous line
 
-//console.log(process.env.MONGODB_URI);
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Route does found"
+    });
+});
+
+// Error handler
+app.use((error, req, res, next) => {
+    console.error(error);
+
+    res.status(500).json({
+        message: "Something went wrong on the server"
+    });
+});
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB");

@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false // Mongoose automatically leaves password out when find() looks for information
     },
 
     isMember: {

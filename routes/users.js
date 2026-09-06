@@ -73,6 +73,7 @@ router.get("/admin", requireAdmin, async (req, res) => {
     }
 });
 
+// Become a member
 router.post("/join", requireLogin, async (req, res) => {
     try {
         const { secret } = req.body;
@@ -93,6 +94,13 @@ router.post("/join", requireLogin, async (req, res) => {
             });
         }
 
+        if(user.isMember)
+        {
+            return res.status(400).json({
+                message: "You are already a member"
+            });
+        }
+
         user.isMember = true;
 
         await user.save();
@@ -102,7 +110,7 @@ router.post("/join", requireLogin, async (req, res) => {
     } catch (error) {
         console.log(error);
 
-        res.json({ message: "Could mot join membership" });
+        res.status(500).json({ message: "Could mot join membership" });
     }
 });
 

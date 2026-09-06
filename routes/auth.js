@@ -10,31 +10,65 @@ router.post("/register", async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        if (!username || !password) {
+        if (!username || !password) 
+        {
             return res.status(400).json({
                 message: "Username and password are required"
             });
         }
 
-        if (password.length < 6) {
+        if (password.length < 8) 
+        {
             return res.status(400).json({
-                message: "Password must be at least 6 characters"
+                message: "Password must be at least 8 characters"
             });
         }
 
-        const existingUser = await User.findOne({ username });
+        if(password.length > 100)
+        {
+            return res.status(400).json ({
+                message: "Password cannot be more than 100 characters"
+            });
+        }
 
-        if (existingUser) {
+        const cleanUsername = username.trim();
+
+        if(cleanUsername.length < 3)
+        {
+            return res.status(400).json({
+                message: "Username must be at least 3 characters"
+            })
+        }
+
+        if(cleanUsername.length > 30)
+        {
+            return res.status(400).json({
+                message: "Username cannot be more than 20 characters"
+            });
+        }
+
+        // const usernamePattern = /^[a-zA-Z0-9_]+$/
+
+        // if(!usernamePattern.test(cleanUsername))
+        // {
+        //     return res.status(400).json({
+        //         message: "Username can only contain letters, numbers and underscores"
+        //     });
+        // }
+
+        const existingUser = await User.findOne({ username: cleanUsername });
+
+        if (existingUser) 
+        {
             return res.status(400).json({
                 message: "Username already exists"
             });
         }
 
-        const hashedPassword =
-            await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = new User({
-            username,
+            username: cleanUsername,
             password: hashedPassword
         });
 
