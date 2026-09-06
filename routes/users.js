@@ -114,4 +114,38 @@ router.post("/join", requireLogin, async (req, res) => {
     }
 });
 
+router.put("/:userId/membership", requireAdmin, async (req, res) => {
+    try {
+        const { isMember } = req.body;
+
+        if(typeof isMember !== "boolean")
+        {
+            return res.status(400).json({
+                message: "isMember must be true or false"
+            });
+        }
+
+        const user = await User.findById(req.params.userId);
+
+        if(!User)
+        {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        user.isMember = isMember;
+
+        await user.save();
+
+        res.json({ message: "Membership Updated" });
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Could not update membership"
+        });
+    }
+});
+
 module.exports = router;

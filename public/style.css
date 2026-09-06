@@ -225,3 +225,63 @@ h1 {
     font-size: 16px;
     font-weight: 600;
 }
+
+.currentUser {
+    font-weight: bold;
+}
+
+#adminPanel,
+#adminButton {
+    display: none;
+}
+
+#adminUsers {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.adminUser {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+}
+
+.adminUser h3 {
+    margin-top: 0;
+}
+
+#adminPanel {
+    padding: 40px;
+}
+
+#adminUserTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background: white;
+}
+
+#adminUserTable th,
+#adminUserTable, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#adminUserTable th {
+    font-weight: bold;
+}
+
+#adminUserTable tr:hover {
+    background: #f7f7f7;
+}
+
+#adminUserTable button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}

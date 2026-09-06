@@ -1,5 +1,9 @@
 console.log("Messaging app loaded");
 
+const adminButton = document.querySelector("#adminButton");
+const adminPanel = document.querySelector("#adminPanel");
+const backToChat = document.querySelector("#backToChat");
+
 const loginScreen = document.querySelector("#loginScreen");
 const registerScreen = document.querySelector("#registerScreen");
 
@@ -75,6 +79,86 @@ async function loadCurrentUser() {
     currentUser = await response.json();
 }
 
+async function loadAdminUsers() {
+    const response = await fetch("/users/admin");
+
+    if(!response.ok)
+    {
+        alert("You do not have permission to access the admin dashboard.");
+        return;
+    };
+
+    const users = await response.json();
+
+    const tableBody = document.querySelector("#AdminUserTableBody");
+    tableBody.textContent = "";
+
+    users.forEach(user => {
+        const row = document.createElement("tr");
+
+        const username = document.createElement("td");
+        username.textContent = user.username;
+
+        if(user._id.toString() === currentUser._id.toString())
+        {
+            row.classList.add("currentUser");
+            username.textContent = `${user.username} (You)`;
+        }
+
+        const member = document.createElement("td");
+        member.textContent = user.isMember ? "Yes" : "No";
+
+        const admin = document.createElement("td");
+        admin.textContent = user.isAdmin ? "Yes" : "No";
+
+        const joined = document.createElement("td");
+        joined.textContent = new Date(user.createdAt).toLocaleDateString();
+
+        const actions = document.createElement("td");
+
+        if(user._id.toString() !== currentUser._id.toString())
+        {
+            const memberButton = document.createElement("button");
+            memberButton.textContent = user.isMember ? "Remove Member" : "Make Member";
+
+            memberButton.addEventListener("click", async () => {
+                const response = await fetch(`/users/${user._id}/membership`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type" : "application/json"
+                        },
+                        body: JSON.stringify({
+                            isMember: !user.isMember
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if(!response.ok)
+                {
+                    alert(data.message);
+                    return;
+                }
+
+                await loadAdminUsers();
+            })
+
+            actions.appendChild(memberButton);
+        }
+
+        row.appendChild(username);
+        row.appendChild(member);
+        row.appendChild(admin);
+        row.appendChild(joined);
+        row.appendChild(actions)
+
+        tableBody.appendChild(row);
+    });
+}
+
 // Initialisation function / Automatically checks if you're already logged in
 async function init() {
     const response = await fetch("/users/me");
@@ -85,6 +169,11 @@ async function init() {
 
         document.querySelector("#authSection").style.display = "none";
         document.querySelector("#app").style.display = "flex";
+
+        if(currentUser.isAdmin)
+        {
+            adminButton.style.display = "block";
+        }
     
         await loadUsers();
     }
@@ -270,7 +359,22 @@ registrationForm.addEventListener("submit", async (event) => {
 
     const data = await response.json();
 
-    console.log(data);
+    if(!response.ok)
+    {
+        alert(data.message);
+        return;
+    }
+
+    alert("Account created successfully! You can now log in.");
+
+    // Switch back to login form
+    registerScreen.style.display = "none";
+    loginScreen.style.display = "block";
+
+    // Clear registration form
+    registrationForm.reset();
+
+    // console.log(data);
 });
 
 const loginForm = document.querySelector("#login");
@@ -355,27 +459,39 @@ logoutButton.addEventListener("click", async () => {
 
 const joinMembershipButton = document.querySelector("#joinMembership");
 
-joinMembershipButton.addEventListener("click", async () => {
-    const secret = prompt("Enter the membership secret:");
+// joinMembershipButton.addEventListener("click", async () => {
+//     const secret = prompt("Enter the membership secret:");
 
-    if(!secret)
-    {
-        return;
-    }
+//     if(!secret)
+//     {
+//         return;
+//     }
 
-    const response = await fetch("/users/join", {
-        method: "POST",
+//     const response = await fetch("/users/join", {
+//         method: "POST",
 
-        headers: {
-            "Content-Type" : "application/json"
-        },
+//         headers: {
+//             "Content-Type" : "application/json"
+//         },
 
-        body: JSON.stringify({
-            secret
-        })
-    });
+//         body: JSON.stringify({
+//             secret
+//         })
+//     });
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    alert(data.message);
+//     alert(data.message);
+// });
+
+adminButton.addEventListener("click", () => {
+    document.querySelector("#app").style.display = "none";
+    adminPanel.style.display = "block";
+
+    loadAdminUsers();
+});
+
+backToChat.addEventListener("click", () => {
+    adminPanel.style.display = "none";
+    document.querySelector("#app").style.display = "flex";
 });
