@@ -12,10 +12,70 @@ h1 {
     height: 100vh;
 }
 
-#userList {
-    width: 250px;
-    padding: 20px;
-    border-right: 1px solid #ccc;
+#registerScreen {
+    display: none;
+}
+
+#authSection {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loginScreen,
+#registerScreen {
+    width: 350px;
+    padding: 40px;
+    border-radius: 15px;
+    background: white;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+}
+
+#loginScreen h1,
+#registerScreen h1 {
+    margin-bottom: 5px;
+}
+
+#loginScreen > p,
+#registerScreen > p {
+    color: #667;
+}
+
+#login,
+#registration {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+#login input,
+#registration input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+#login button[type="submit"],
+#registration button[type="submit"] {
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+#showRegister,
+#showLogin {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: inherit;
+    font-weight: bold;
 }
 
 /* This makes the message area take up all the available space */
@@ -106,6 +166,12 @@ h1 {
 .received {
     margin-right: auto;
     background-color: #eee;
+}
+
+#userList {
+    width: 250px;
+    padding: 20px;
+    border-right: 1px solid #ccc;
 }
 
 #users {

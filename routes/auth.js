@@ -91,7 +91,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const {username, password } = req.body;
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }).select("+password"); // We need password to be true here
 
         if(!user)
         {

@@ -8,38 +8,51 @@
 </head>
 <body>
     <div id="authSection">
-        <h1>My Messaging App</h1>
-        <!-- <p>Welcome!!!</p> -->
+        <!-- Login -->
+         <div id="loginScreen">
+            <h1>Welcome Back!!!</h1>
+            <p>Log in to your account</p>
 
-        <form id="registration">
-            <h2>Create Account</h2>
+            <form id="login">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" required>
+        
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required>
+        
+                <button type="submit">Login</button>
+            </form>
 
-            <label for="name">Username</label>
-            <input type="text" id="name" required>
-    
-            <label for="password">Password</label>
-            <input type="password" id="password" required>
-    
-            <button type="submit">Create User</button>
-        </form>
+            <p>Don't have an account? <button id="showRegister">Register now!</button></p>
+         </div>
 
-        <form id="login">
-            <label for="loginUsername">Username</label>
-            <input type="text" id="loginUsername" required>
-    
-            <label for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" required>
-    
-            <button type="submit">Login</button>
-        </form>
+         <!-- Registration -->
+         <div id="registerScreen">
+            <h1>Create an Account</h1>
+            <p>Register to start messaging</p>
 
-        <form id="membershipForm">
+            <form id="registration">
+                <h2>Create Account</h2>
+    
+                <label for="name">Username</label>
+                <input type="text" id="name" required>
+        
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+        
+                <button type="submit">Create User</button>
+            </form>
+
+            <p>Already have an account? <button id="showLogin">Log in!</button></p>
+         </div>
+
+        <!-- <form id="membershipForm">
             <h2>Become a Member</h2>
 
             <input type="password" id="membershipSecret" placeholder="Membership secret" required>
 
             <button type="submit">Join</button>
-        </form>
+        </form> -->
     </div>
 
     <div id="app">

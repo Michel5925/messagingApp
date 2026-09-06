@@ -1,5 +1,21 @@
 console.log("Messaging app loaded");
 
+const loginScreen = document.querySelector("#loginScreen");
+const registerScreen = document.querySelector("#registerScreen");
+
+const showRegisterButton = document.querySelector("#showRegister");
+const showLoginButton = document.querySelector("#showLogin");
+
+showRegisterButton.addEventListener("click", () => {
+    loginScreen.style.display = "none";
+    registerScreen.style.display = "block";
+});
+
+showLoginButton.addEventListener("click", () => {
+    loginScreen.style.display = "block";
+    registerScreen.style.display = "none";
+});
+
 const usersContainer = document.querySelector("#users");
 
 let selectedUser = null;
