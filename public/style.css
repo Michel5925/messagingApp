@@ -1,5 +1,26 @@
+:root {
+    --primary: #38bdf8;
+    --primary-dark: #0284c7;
+    --primary-light: #e0f2fe;
+    --background: #f0f9ff;
+    --surface: #ffffff;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #dbeafe;
+    --sent: #38bdf8;
+    --received: #e0f2fe;
+    --danger: #ef4444;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
     text-align: center;
 }
 
@@ -8,8 +29,9 @@ h1 {
 }
 
 #app {
-    display: none;
+    display: flex;
     height: 100vh;
+    background: var(--background);
 }
 
 #registerScreen {
@@ -78,38 +100,93 @@ h1 {
     font-weight: bold;
 }
 
+#logout {
+    width: 100%;
+    padding: 11px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: var(--danger);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#logout:hover {
+    background: #fee2e2;
+}
+
 /* This makes the message area take up all the available space */
 #chat {
     flex: 1;
     display: flex;
     flex-direction: column;
+    background: #f8fcff;
 }
 
 #chatHeader {
     padding: 20px;
-    border-bottom: 1px solid #ccc;
+    background: white;
+    border-bottom: 1px solid var(--border);
 } 
+
+#chatWith {
+    margin: 0;
+    color: var(--text);
+}
 
 /* Allows area to scroll when there are lots of messages */
 #messages {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 #messageForm {
     display: flex;
-    padding: 20px;
-    border-top: 1px solid #ccc;
+    padding: 15px 20px;
+    background: white;
+    border-top: 1px solid var(--border);
+    gap: 10px;
 }
 
 #messageText {
     flex: 1;
-    padding: 10px;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 25px;
+    font-size: 15px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+#messageText:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 #messageForm button {
-    padding: 10px 20px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 25px;
+    background: var(--primary);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+#messageForm button:hover {
+    background: var(--primary-dark);
+}
+
+#messageForm button:active {
+    transform: scale(0.97);
 }
 
 /* Make the messages look different */
@@ -117,23 +194,26 @@ h1 {
     display: flex;
     flex-direction: column;
     padding: 10px 15px;
-    margin-bottom: 10px;
-    border-radius: 10px;
+    margin-bottom: 12px;
+    border-radius: 16px;
     max-width: 60%;
     overflow-wrap: anywhere;
     text-align: left;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .message small {
     font-size: 11px;
-    margin-top: 4px;
-    opacity: 0.6;
+    margin-top: 5px;
+    opacity: 0.7;
+    align-self: flex-end;
 }
 
 .messageButtons {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     justify-content: flex-end;
+    margin-top: 5px;
 }
 
 .message button {
@@ -145,22 +225,53 @@ h1 {
     margin-left: 5px;
 }
 
+.messageButtons button {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.7;
+    padding: 2px 5px;
+    transition: opacity 0.2s;
+}
+
+.messageButtons button:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
 .message button:hover {
     opacity: 1;
 }
 
 .messagePreview {
-    margin-top: 3px;
+    margin-top: 4px;
     font-size: 13px;
     opacity: 0.6;
+    color: var(--primary-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.message.sent {
+    align-self: flex-start;
+    background: var(--sent);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
 .sent {
     margin-left: auto;
     background-color: #d1e7ff;
+}
+
+.message.received {
+    align-self: flex-start;
+    background: var(--received);
+    color: var(--text);
+    border-bottom-left-radius: 4px;
 }
 
 .received {
@@ -169,15 +280,23 @@ h1 {
 }
 
 #userList {
-    width: 250px;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
     padding: 20px;
-    border-right: 1px solid #ccc;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+}
+
+#userList h2 {
+    margin-top: 0;
+    color: var(--primary-dark);
+    font-size: 24px;
 }
 
 #users {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .user {
@@ -189,18 +308,21 @@ h1 {
     border: none;
     background: transparent;
     text-align: left;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 12px 15px;
+    border-radius: 10px;
     cursor: pointer;
     font-size: 16px;
+    margin-bottom: 6px;
+    transition: background 0.2s, transform 0.1s;
 }
 
 .user:hover {
-    background: #eee;
+    background: var(--primary-light);
 }
 
 .user.active {
-    background: #ddd;
+    background: var(--primary-light);
+    color: var(--primary-dark);
     font-weight: bold;
 }
 
@@ -208,10 +330,12 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 2px 6px;
+    min-width: 22px;
+    height: 22px;
+    padding: 2px 7px;
     border-radius: 50%;
+    background: var(--primary);
+    color: white;
     font-size: 12px;
     font-weight: bold;
 }
@@ -224,6 +348,7 @@ h1 {
 .username {
     font-size: 16px;
     font-weight: 600;
+    color: var(--text);
 }
 
 .currentUser {
@@ -233,6 +358,24 @@ h1 {
 #adminPanel,
 #adminButton {
     display: none;
+}
+
+#adminButton {
+    width: 100%;
+    padding: 11px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#adminButton:hover {
+    background: var(--primary-dark);
 }
 
 #adminUsers {
