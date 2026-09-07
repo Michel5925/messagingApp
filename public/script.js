@@ -106,10 +106,18 @@ async function loadAdminUsers() {
         }
 
         const member = document.createElement("td");
-        member.textContent = user.isMember ? "Yes" : "No";
+        const memberBadge = document.createElement("span");
+        memberBadge.textContent = user.isMember ? "Member" : "Not a Member";
+        memberBadge.classList.add("statusBadge");
+        memberBadge.classList.add(user.isMember ? "memberBadge" : "notMemberBadge");
+        member.appendChild(memberBadge);
 
         const admin = document.createElement("td");
-        admin.textContent = user.isAdmin ? "Yes" : "No";
+        const adminBadge = document.createElement("span");
+        adminBadge.textContent = user.isAdmin ? "Admin" : "User";
+        adminBadge.classList.add("statusBadge");
+        adminBadge.classList.add(user.isAdmin ? "adminBadge" : "userBadge");
+        admin.appendChild(adminBadge);
 
         const joined = document.createElement("td");
         joined.textContent = new Date(user.createdAt).toLocaleDateString();
@@ -119,6 +127,7 @@ async function loadAdminUsers() {
         if(user._id.toString() !== currentUser._id.toString())
         {
             const memberButton = document.createElement("button");
+            memberButton.classList.add("membershipButton");
             memberButton.textContent = user.isMember ? "Remove Member" : "Make Member";
 
             memberButton.addEventListener("click", async () => {

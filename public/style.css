@@ -21,15 +21,10 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     background: var(--background);
     color: var(--text);
-    text-align: center;
-}
-
-h1 {
-    margin-top: 100px;
 }
 
 #app {
-    display: flex;
+    display: none;
     height: 100vh;
     background: var(--background);
 }
@@ -38,30 +33,85 @@ h1 {
     display: none;
 }
 
+#loginScreen h1,
+#loginScreen p,
+#registerScreen h1,
+#registerScreen p {
+    color: var(--primary-dark);
+}
+
 #authSection {
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: var(--background);
+    padding: 20px;
 }
 
-#loginScreen,
-#registerScreen {
-    width: 350px;
-    padding: 40px;
-    border-radius: 15px;
+#authSection form {
+    width: 100%;
+    max-width: 400px;
+    padding: 35px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(2, 132, 199, 0.10);
+    display: flex;
+    flex-direction: column;
+}
+
+#authSection h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    text-align: center;
+    color: var(--primary-dark);
+    font-size: 30px;
+}
+
+#authSection label {
+    margin-bottom: 6px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#authSection input {
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fcff;
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+#authSection input:focus {
     background: white;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
-#loginScreen h1,
-#registerScreen h1 {
-    margin-bottom: 5px;
+#authSection button {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
 }
 
-#loginScreen > p,
-#registerScreen > p {
-    color: #667;
+#authSection button:hover {
+    background: var(--primary-dark);
+}
+
+#authSection button:active {
+    transform: scale(0.97);
 }
 
 #login,
@@ -70,24 +120,6 @@ h1 {
     flex-direction: column;
     gap: 10px;
     margin-top: 25px;
-}
-
-#login input,
-#registration input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-#login button[type="submit"],
-#registration button[type="submit"] {
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
 }
 
 #showRegister,
@@ -216,15 +248,6 @@ h1 {
     margin-top: 5px;
 }
 
-.message button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 12px;
-    opacity: 0.6;
-    margin-left: 5px;
-}
-
 .messageButtons button {
     border: none;
     background: transparent;
@@ -249,22 +272,17 @@ h1 {
     margin-top: 4px;
     font-size: 13px;
     opacity: 0.6;
-    color: var(--primary-light);
+    color: var(--text);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .message.sent {
-    align-self: flex-start;
+    align-self: flex-end;
     background: var(--sent);
     color: white;
     border-bottom-right-radius: 4px;
-}
-
-.sent {
-    margin-left: auto;
-    background-color: #d1e7ff;
 }
 
 .message.received {
@@ -272,11 +290,6 @@ h1 {
     background: var(--received);
     color: var(--text);
     border-bottom-left-radius: 4px;
-}
-
-.received {
-    margin-right: auto;
-    background-color: #eee;
 }
 
 #userList {
@@ -385,19 +398,16 @@ h1 {
     margin-top: 20px;
 }
 
-.adminUser {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: white;
-}
-
-.adminUser h3 {
-    margin-top: 0;
-}
-
 #adminPanel {
+    min-height: 100vh;
     padding: 40px;
+    background: var(--background);
+}
+
+#adminPanel h1 {
+    margin-top: 0;
+    color: var(--primary-dark);
+    font-size: 32px;
 }
 
 #adminUserTable {
@@ -405,21 +415,31 @@ h1 {
     border-collapse: collapse;
     margin-top: 30px;
     background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 #adminUserTable th,
-#adminUserTable, td {
+#adminUserTable td {
     padding: 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border);
 }
 
 #adminUserTable th {
     font-weight: bold;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 14px;
 }
 
 #adminUserTable tr:hover {
     background: #f7f7f7;
+}
+
+#adminUserTable tbody tr:hover {
+    background: #f8fcff;
 }
 
 #adminUserTable button {
@@ -427,4 +447,68 @@ h1 {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+}
+
+#backToChat {
+    padding: 10px 18px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#backToChat:hover {
+    background: var(--primary-dark);
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.memberBadge {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.notMemberBadge {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.membershipButton {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 7px;
+    background: var(--primary);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.membershipButton:hover {
+    background: var(--primary-dark);
+}
+
+.membershipButton:active {
+    transform: scale(0.97);
+}
+
+.adminBadge {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.userBadge {
+    background: #f1f5f9;
+    color: #64748b;
 }
