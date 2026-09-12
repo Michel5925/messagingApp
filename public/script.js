@@ -20,6 +20,13 @@ showLoginButton.addEventListener("click", () => {
     registerScreen.style.display = "none";
 });
 
+const backToUsers = document.querySelector("#backToUsers");
+
+backToUsers.addEventListener("click", () => {
+    document.querySelector("#userList").classList.remove("mobileHidden");
+    document.querySelector("#chat").classList.remove("mobileChat");
+})
+
 const usersContainer = document.querySelector("#users");
 
 let selectedUser = null;
@@ -77,6 +84,11 @@ async function loadCurrentUser() {
     }
 
     currentUser = await response.json();
+
+    if(currentUser.isAdmin)
+    {
+        adminButton.style.display = "block";
+    }
 }
 
 async function loadAdminUsers() {
@@ -90,7 +102,7 @@ async function loadAdminUsers() {
 
     const users = await response.json();
 
-    const tableBody = document.querySelector("#AdminUserTableBody");
+    const tableBody = document.querySelector("#adminUserTableBody");
     tableBody.textContent = "";
 
     users.forEach(user => {
@@ -172,20 +184,22 @@ async function loadAdminUsers() {
 async function init() {
     const response = await fetch("/users/me");
 
-    if(response.ok)
+    if(!response.ok)
     {
-        currentUser = await response.json();
-
-        document.querySelector("#authSection").style.display = "none";
-        document.querySelector("#app").style.display = "flex";
-
-        if(currentUser.isAdmin)
-        {
-            adminButton.style.display = "block";
-        }
-    
-        await loadUsers();
+        return;
     }
+
+    currentUser = await response.json();
+
+    document.querySelector("#authSection").style.display = "none";
+    document.querySelector("#app").style.display = "flex";
+
+    if(currentUser.isAdmin)
+    {
+        adminButton.style.display = "block";
+    }
+
+    await loadUsers();
 }
 
 init();
@@ -193,6 +207,9 @@ init();
 // Selecting a user
 async function selectUser(user) {
     selectedUser = user;
+
+    document.querySelector("#userList").classList.add("mobileHidden");
+    document.querySelector("#chat").classList.add("mobileChat");
 
     document.querySelector("#chatWith").textContent = user.username;
 

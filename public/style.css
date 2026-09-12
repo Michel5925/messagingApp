@@ -23,6 +23,10 @@ body {
     color: var(--text);
 }
 
+/* =========================
+   DESKTOP
+   ========================= */
+
 #app {
     display: none;
     height: 100vh;
@@ -511,4 +515,288 @@ body {
 .userBadge {
     background: #f1f5f9;
     color: #64748b;
+}
+
+#backToUsers {
+    display: none;
+}
+
+/* =========================
+   MOBILE RESPONSIVE DESIGN
+   ========================= */
+
+   @media (max-width: 600px) {
+
+    /* =========================
+       AUTH
+       ========================= */
+
+    #authSection {
+        padding: 15px;
+    }
+
+    #authSection form {
+        max-width: 400px;
+        padding: 30px 25px;
+        border-radius: 18px;
+    }
+
+    #authSection h2 {
+        font-size: 25px;
+    }
+
+    #authSection input {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    #authSection button {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* =========================
+       APP
+       ========================= */
+
+    #app {
+        height: 100dvh;
+        position: relative;
+    }
+
+    /* =========================
+       USER LIST
+       ========================= */
+
+    #userList {
+        width: 100%;
+        min-width: 0;
+        height: 100dvh;
+        padding: 15px;
+        border-right: none;
+    }
+
+    #userList h2 {
+        font-size: 24px;
+    }
+
+    .user {
+        padding: 14px 12px;
+        margin-bottom: 6px;
+        font-size: 15px;
+    }
+
+    .username {
+        font-size: 15px;
+    }
+
+    .messagePreview {
+        font-size: 12px;
+    }
+
+    .unreadBadge {
+        min-width: 20px;
+        height: 20px;
+        padding: 2px 6px;
+        font-size: 11px;
+    }
+
+    /* =========================
+       CHAT
+       ========================= */
+
+    #chat {
+        width: 100%;
+        height: 100dvh;
+        display: none;
+    }
+
+    #chat.mobileChat {
+        display: flex;
+    }
+
+    #userList.mobileHidden {
+        display: none;
+    }
+
+    /* =========================
+       CHAT HEADER
+       ========================= */
+
+    #chatHeader {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    #chatWith {
+        font-size: 18px;
+    }
+
+    #backToUsers {
+        display: block;
+        border: none;
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    /* =========================
+       MESSAGES
+       ========================= */
+
+    #messages {
+        padding: 15px 10px;
+    }
+
+    .message {
+        max-width: 80%;
+        padding: 9px 12px;
+        font-size: 14px;
+        border-radius: 14px;
+    }
+
+    /* =========================
+       MESSAGE FORM
+       ========================= */
+
+    #messageForm {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    #messageText {
+        min-width: 0;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    #messageForm button {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    /* =========================
+       EDIT / DELETE
+       ========================= */
+
+    .messageButtons {
+        gap: 4px;
+    }
+
+    .messageButtons button {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+}
+
+/* Mobile admin dashboard */
+@media (max-width: 600px) {
+
+    #adminPanel {
+        padding: 20px 15px;
+    }
+
+    #adminPanel h1 {
+        font-size: 26px;
+        margin-bottom: 15px;
+    }
+
+    #backToChat {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #adminUsers {
+        margin-top: 0;
+    }
+
+    /* Turn the table into cards */
+    #adminUserTable,
+    #adminUserTable tbody {
+        display: block;
+        width: 100%;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #adminUserTable thead {
+        display: none;
+    }
+
+    #adminUserTable tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 18px;
+        margin-bottom: 15px;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+    }
+
+    #adminUserTable td {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        border: none;
+    }
+
+    /* Username takes the whole row */
+    #adminUserTable td:first-child {
+        grid-column: 1 / -1;
+        font-size: 17px;
+        font-weight: bold;
+        color: var(--primary-dark);
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Member and Admin */
+    #adminUserTable td:nth-child(2),
+    #adminUserTable td:nth-child(3) {
+        justify-content: flex-start;
+    }
+
+    /* Joined date */
+    #adminUserTable td:nth-child(4) {
+        font-size: 13px;
+        color: var(--text-light);
+    }
+
+    /* Actions */
+    #adminUserTable td:last-child {
+        grid-column: 1 / -1;
+        padding-top: 5px;
+    }
+
+    #adminUserTable button {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        background: var(--primary);
+        color: white;
+        font-weight: bold;
+    }
+
+    #adminUserTable button:hover {
+        background: var(--primary-dark);
+    }
+
+    /* Make badges slightly smaller */
+    .statusBadge {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    /* Highlight your own account */
+    #adminUserTable tr.currentUser {
+        border: 2px solid var(--primary);
+    }
 }
