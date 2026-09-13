@@ -8,7 +8,7 @@ const userRoutes = require("./routes/users.js");
 const messageRoutes = require("./routes/messages.js");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 // express.static() automatically serves index.html
