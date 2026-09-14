@@ -8,6 +8,7 @@ const userRoutes = require("./routes/users.js");
 const messageRoutes = require("./routes/messages.js");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
